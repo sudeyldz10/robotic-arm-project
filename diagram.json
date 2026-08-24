@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "author": "Sude",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-servo", "id": "servo1", "top": 0, "left": 250, "attrs": {} },
+    { "type": "wokwi-servo", "id": "servo2", "top": 80, "left": 250, "attrs": {} },
+    { "type": "wokwi-servo", "id": "servo3", "top": 160, "left": 250, "attrs": {} },
+    { "type": "wokwi-servo", "id": "servo4", "top": 240, "left": 250, "attrs": {} }
+  ],
+  "connections": [
+    
+    [ "servo1:V+", "uno:5V", "red", [] ],
+    [ "servo1:GND", "uno:GND.1", "black", [] ],
+    [ "servo1:PWM", "uno:2", "green", [] ],
+
+    [ "servo2:V+", "uno:5V", "red", [] ],
+    [ "servo2:GND", "uno:GND.1", "black", [] ],
+    [ "servo2:PWM", "uno:4", "green", [] ],
+
+    [ "servo3:V+", "uno:5V", "red", [] ],
+    [ "servo3:GND", "uno:GND.1", "black", [] ],
+    [ "servo3:PWM", "uno:6", "green", [] ],
+
+    [ "servo4:V+", "uno:5V", "red", [] ],
+    [ "servo4:GND", "uno:GND.1", "black", [] ],
+    [ "servo4:PWM", "uno:5", "green", [] ]
+
+
+  ],
+  "dependencies": {}
+}
