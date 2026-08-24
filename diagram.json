@@ -4,20 +4,39 @@
   "editor": "wokwi",
   "parts": [
     { "type": "wokwi-arduino-uno", "id": "uno", "top": 0, "left": 0, "attrs": {} },
-    { "type": "wokwi-servo", "id": "servo1", "top": 0, "left": 250, "attrs": {} },
-    { "type": "wokwi-servo", "id": "servo2", "top": 80, "left": 250, "attrs": {} },
-    { "type": "wokwi-servo", "id": "servo3", "top": 160, "left": 250, "attrs": {} },
-    { "type": "wokwi-servo", "id": "servo4", "top": 240, "left": 250, "attrs": {} }
+    { "type": "wokwi-potentiometer", "id": "pot1", "top": 0,   "left": 250, "attrs": { "value": "512" } },
+    { "type": "wokwi-potentiometer", "id": "pot2", "top": 80,  "left": 250, "attrs": { "value": "512" } },
+    { "type": "wokwi-potentiometer", "id": "pot3", "top": 160, "left": 250, "attrs": { "value": "512" } },
+    { "type": "wokwi-potentiometer", "id": "pot4", "top": 240, "left": 250, "attrs": { "value": "512" } },
+    { "type": "wokwi-servo", "id": "servo1", "top": 0,   "left": 450, "attrs": {} },
+    { "type": "wokwi-servo", "id": "servo2", "top": 80,  "left": 450, "attrs": {} },
+    { "type": "wokwi-servo", "id": "servo3", "top": 160, "left": 450, "attrs": {} },
+    { "type": "wokwi-servo", "id": "servo4", "top": 240, "left": 450, "attrs": {} }
   ],
   "connections": [
-    
+    [ "pot1:VCC", "uno:5V", "red", [] ],
+    [ "pot1:GND", "uno:GND.1", "black", [] ],
+    [ "pot1:SIG", "uno:A0", "green", [] ],
+
+    [ "pot2:VCC", "uno:5V", "red", [] ],
+    [ "pot2:GND", "uno:GND.1", "black", [] ],
+    [ "pot2:SIG", "uno:A1", "green", [] ],
+
+    [ "pot3:VCC", "uno:5V", "red", [] ],
+    [ "pot3:GND", "uno:GND.1", "black", [] ],
+    [ "pot3:SIG", "uno:A2", "green", [] ],
+
+    [ "pot4:VCC", "uno:5V", "red", [] ],
+    [ "pot4:GND", "uno:GND.1", "black", [] ],
+    [ "pot4:SIG", "uno:A3", "green", [] ],
+
     [ "servo1:V+", "uno:5V", "red", [] ],
     [ "servo1:GND", "uno:GND.1", "black", [] ],
-    [ "servo1:PWM", "uno:2", "green", [] ],
+    [ "servo1:PWM", "uno:3", "green", [] ],
 
     [ "servo2:V+", "uno:5V", "red", [] ],
     [ "servo2:GND", "uno:GND.1", "black", [] ],
-    [ "servo2:PWM", "uno:4", "green", [] ],
+    [ "servo2:PWM", "uno:5", "green", [] ],
 
     [ "servo3:V+", "uno:5V", "red", [] ],
     [ "servo3:GND", "uno:GND.1", "black", [] ],
@@ -25,9 +44,7 @@
 
     [ "servo4:V+", "uno:5V", "red", [] ],
     [ "servo4:GND", "uno:GND.1", "black", [] ],
-    [ "servo4:PWM", "uno:5", "green", [] ]
-
-
+    [ "servo4:PWM", "uno:9", "green", [] ]
   ],
   "dependencies": {}
 }

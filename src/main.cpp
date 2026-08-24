@@ -3,28 +3,41 @@
 
 
 Servo servos[4];
-int servoPins[]= {2,4,6,5};
-int servoAngles[]={90,90,90,90};
-int servoCount=4;
+
+
+int servoPins[] = { 3, 5, 6, 9 };
+
+
+int potPins[] = { A0, A1, A2, A3 };
+
+int jointCount = 4;
 
 void setup() {
-  for(int i=0; i<servoCount; i++) {
-    servos[i].attach(servoPins[i]);    //her servoyu ilgili pine bağla
-    servos[i].write(servoAngles[i]);
-
+  Serial.begin(9600);
+  for (int i = 0; i < jointCount; i++) {
+    servos[i].attach(servoPins[i]);
   }
-  
 }
 
 void loop() {
-  for (int i = 0; i < servoCount; i++) {
-    servos[i].write(45);
-  }
-  delay(1000);
+  for (int i = 0; i < jointCount; i++) {
+    
+    int potValue = analogRead(potPins[i]);
 
-  for (int i = 0; i < servoCount; i++) {
-    servos[i].write(135);
-  }
-  delay(1000);
+    
+    int angle = map(potValue, 0, 1023, 0, 180);
 
+    
+    servos[i].write(angle);
+
+    
+    Serial.print("Servo ");
+    Serial.print(i);
+    Serial.print(": ");
+    Serial.print(angle);
+    Serial.print("  ");
+  }
+  Serial.println();
+
+  delay(15);
 }
