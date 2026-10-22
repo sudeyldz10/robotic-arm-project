@@ -3,48 +3,363 @@
   "author": "Sude",
   "editor": "wokwi",
   "parts": [
-    { "type": "wokwi-arduino-uno", "id": "uno", "top": 0, "left": 0, "attrs": {} },
-    { "type": "wokwi-potentiometer", "id": "pot1", "top": 0,   "left": 250, "attrs": { "value": "512" } },
-    { "type": "wokwi-potentiometer", "id": "pot2", "top": 80,  "left": 250, "attrs": { "value": "512" } },
-    { "type": "wokwi-potentiometer", "id": "pot3", "top": 160, "left": 250, "attrs": { "value": "512" } },
-    { "type": "wokwi-potentiometer", "id": "pot4", "top": 240, "left": 250, "attrs": { "value": "512" } },
-    { "type": "wokwi-servo", "id": "servo1", "top": 0,   "left": 450, "attrs": {} },
-    { "type": "wokwi-servo", "id": "servo2", "top": 80,  "left": 450, "attrs": {} },
-    { "type": "wokwi-servo", "id": "servo3", "top": 160, "left": 450, "attrs": {} },
-    { "type": "wokwi-servo", "id": "servo4", "top": 240, "left": 450, "attrs": {} }
+    {
+      "type": "wokwi-arduino-uno",
+      "id": "uno",
+      "top": 120,
+      "left": 120,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "base",
+      "top": -260,
+      "left": -260,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "sh_a",
+      "top": -180,
+      "left": -260,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "sh_b",
+      "top": -100,
+      "left": -260,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "el_a",
+      "top": -260,
+      "left": 260,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_base_sol",
+      "top": 400,
+      "left": -200,
+      "attrs": {
+        "color": "blue",
+        "label": "Taban sol"
+      }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_base_sag",
+      "top": 400,
+      "left": -90,
+      "attrs": {
+        "color": "blue",
+        "label": "Taban sag"
+      }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_omuz_ileri",
+      "top": 400,
+      "left": 20,
+      "attrs": {
+        "color": "green",
+        "label": "Omuz ileri"
+      }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_omuz_geri",
+      "top": 400,
+      "left": 130,
+      "attrs": {
+        "color": "green",
+        "label": "Omuz geri"
+      }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_dirsek_asagi",
+      "top": 400,
+      "left": 240,
+      "attrs": {
+        "color": "yellow",
+        "label": "Dirsek asagi"
+      }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_dirsek_yukari",
+      "top": 400,
+      "left": 350,
+      "attrs": {
+        "color": "yellow",
+        "label": "Dirsek yukari"
+      }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_grip_ac",
+      "top": 400,
+      "left": 460,
+      "attrs": {
+        "color": "red",
+        "label": "Gripper ac"
+      }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_grip_kapat",
+      "top": 400,
+      "left": 570,
+      "attrs": {
+        "color": "red",
+        "label": "Gripper kapat"
+      }
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "grip_a",
+      "top": -100,
+      "left": 260,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "grip_b",
+      "top": -20,
+      "left": 260,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_auto",
+      "top": 520,
+      "left": -200,
+      "attrs": {
+        "color": "white",
+        "label": "Otomatik gorev"
+      }
+    }
   ],
   "connections": [
-    [ "pot1:VCC", "uno:5V", "red", [] ],
-    [ "pot1:GND", "uno:GND.1", "black", [] ],
-    [ "pot1:SIG", "uno:A0", "green", [] ],
-
-    [ "pot2:VCC", "uno:5V", "red", [] ],
-    [ "pot2:GND", "uno:GND.1", "black", [] ],
-    [ "pot2:SIG", "uno:A1", "green", [] ],
-
-    [ "pot3:VCC", "uno:5V", "red", [] ],
-    [ "pot3:GND", "uno:GND.1", "black", [] ],
-    [ "pot3:SIG", "uno:A2", "green", [] ],
-
-    [ "pot4:VCC", "uno:5V", "red", [] ],
-    [ "pot4:GND", "uno:GND.1", "black", [] ],
-    [ "pot4:SIG", "uno:A3", "green", [] ],
-
-    [ "servo1:V+", "uno:5V", "red", [] ],
-    [ "servo1:GND", "uno:GND.1", "black", [] ],
-    [ "servo1:PWM", "uno:3", "green", [] ],
-
-    [ "servo2:V+", "uno:5V", "red", [] ],
-    [ "servo2:GND", "uno:GND.1", "black", [] ],
-    [ "servo2:PWM", "uno:5", "green", [] ],
-
-    [ "servo3:V+", "uno:5V", "red", [] ],
-    [ "servo3:GND", "uno:GND.1", "black", [] ],
-    [ "servo3:PWM", "uno:6", "green", [] ],
-
-    [ "servo4:V+", "uno:5V", "red", [] ],
-    [ "servo4:GND", "uno:GND.1", "black", [] ],
-    [ "servo4:PWM", "uno:9", "green", [] ]
+    [
+      "base:PWM",
+      "uno:3",
+      "green",
+      []
+    ],
+    [
+      "base:V+",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "base:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "sh_a:PWM",
+      "uno:5",
+      "green",
+      []
+    ],
+    [
+      "sh_a:V+",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "sh_a:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "sh_b:PWM",
+      "uno:6",
+      "green",
+      []
+    ],
+    [
+      "sh_b:V+",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "sh_b:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "el_a:PWM",
+      "uno:9",
+      "green",
+      []
+    ],
+    [
+      "el_a:V+",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "el_a:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "btn_base_sol:1.l",
+      "uno:2",
+      "green",
+      []
+    ],
+    [
+      "btn_base_sol:2.l",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "btn_base_sag:1.l",
+      "uno:4",
+      "green",
+      []
+    ],
+    [
+      "btn_base_sag:2.l",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "btn_omuz_ileri:1.l",
+      "uno:7",
+      "green",
+      []
+    ],
+    [
+      "btn_omuz_ileri:2.l",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "btn_omuz_geri:1.l",
+      "uno:8",
+      "green",
+      []
+    ],
+    [
+      "btn_omuz_geri:2.l",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "btn_dirsek_asagi:1.l",
+      "uno:12",
+      "green",
+      []
+    ],
+    [
+      "btn_dirsek_asagi:2.l",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "btn_dirsek_yukari:1.l",
+      "uno:13",
+      "green",
+      []
+    ],
+    [
+      "btn_dirsek_yukari:2.l",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "btn_grip_ac:1.l",
+      "uno:A0",
+      "green",
+      []
+    ],
+    [
+      "btn_grip_ac:2.l",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "btn_grip_kapat:1.l",
+      "uno:A1",
+      "green",
+      []
+    ],
+    [
+      "btn_grip_kapat:2.l",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "grip_a:PWM",
+      "uno:10",
+      "green",
+      []
+    ],
+    [
+      "grip_a:V+",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "grip_a:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "grip_b:PWM",
+      "uno:11",
+      "green",
+      []
+    ],
+    [
+      "grip_b:V+",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "grip_b:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "btn_auto:1.l",
+      "uno:A2",
+      "green",
+      []
+    ],
+    [
+      "btn_auto:2.l",
+      "uno:GND.1",
+      "black",
+      []
+    ]
   ],
   "dependencies": {}
 }
