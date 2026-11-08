@@ -55,6 +55,8 @@ h1 { font-size: 22px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
 #score { right: 10px; top: 8px; font-variant-numeric: tabular-nums; }
 #score b { color: var(--ok); font-weight: 500; }
 #msg { left: 10px; bottom: 10px; max-width: calc(100% - 20px); }
+#keys { left: 10px; top: 8px; line-height: 1.6; }
+#keys kbd { font-family: var(--font-data); border: 1px solid var(--line); border-radius: 3px; padding: 0 4px; background: var(--bg); }
 #hint { position: absolute; right: 10px; bottom: 10px; font-family: var(--font-data); font-size: 11px; color: var(--muted); pointer-events: none; }
 .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
 @media (max-width: 820px) { .grid { grid-template-columns: minmax(0, 1fr); } #hint { display: none; } }
@@ -114,6 +116,7 @@ td.m { font-family: var(--font-data); }
   </header>
 
   <div id="stage">
+    <div class="hud" id="keys"><kbd>Q</kbd><kbd>E</kbd> taban · <kbd>W</kbd><kbd>S</kbd> omuz · <kbd>R</kbd><kbd>F</kbd> dirsek · <kbd>Z</kbd><kbd>X</kbd> gripper · <kbd>G</kbd> otomatik<br>ok tuşları: ←→ taban, ↑↓ omuz</div>
     <div class="hud" id="score"></div>
     <div class="hud" id="msg">Gripper'ı aç, küpün üstüne indir, kapat, hedefe taşı, aç.</div>
     <div id="hint">sürükle: döndür · tekerlek: zoom · sağ tık: kaydır</div>
@@ -140,7 +143,7 @@ td.m { font-family: var(--font-data); }
       <div class="panel">
         <h2>Butonlar (basılı tut)</h2>
         <div class="pad" id="pad"></div>
-        <p class="note" style="margin-top:10px">Ekran butonları breadboard'daki fiziksel butonlarla aynı işi yapar. Klavyede G tuşu otomatik görevi başlatır / durdurur.</p>
+        <p class="note" style="margin-top:10px">Ekran butonları breadboard'daki fiziksel butonlarla aynı işi yapar. Klavye: Q/E taban, W/S omuz, R/F dirsek, Z/X gripper (ok tuşları taban ve omuz için de çalışır), G otomatik görevi başlatır / durdurur.</p>
       </div>
     </div>
 
@@ -1313,8 +1316,20 @@ td.m { font-family: var(--font-data); }
   scene.add(grid);
 
   var edgeMat = new THREE.LineBasicMaterial({ color: 0x5e4426, transparent: true, opacity: 0.55 });
-  function cmat(c) { return new THREE.MeshStandardMaterial({ color: c, roughness: 0.95, flatShading: true }); }
-  var mBase = cmat(0xbb9660), mTable = cmat(0xd0ae78), mArm = cmat(0xc9a46b), mFore = cmat(0xd8b985), mJaw = cmat(0xe2c796);
+  // karton: ince oluklu çizgiler, dondurma çubuğu: açık renk ahşap damarı
+  function stripeTex(base, line, n, vertical) {
+    var cv = document.createElement('canvas'); cv.width = cv.height = 128;
+    var g = cv.getContext('2d');
+    g.fillStyle = base; g.fillRect(0, 0, 128, 128);
+    g.fillStyle = line; g.globalAlpha = 0.35;
+    for (var i = 0; i < n; i++) { var p = (i + 0.5) * 128 / n; if (vertical) g.fillRect(p - 1, 0, 2, 128); else g.fillRect(0, p - 1, 128, 2); }
+    var t = new THREE.CanvasTexture(cv); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t;
+  }
+  var texCard = stripeTex('#d8b57e', '#9a7a45', 12, false), texWood = stripeTex('#f3e2bb', '#d2b17a', 5, true);
+  function cmat(c) { return new THREE.MeshStandardMaterial({ color: new THREE.Color(c).lerp(new THREE.Color(0xffffff), 0.55), map: texCard, roughness: 0.95, flatShading: true }); }
+  function wmat(c) { return new THREE.MeshStandardMaterial({ color: 0xffffff, map: texWood, roughness: 0.85 }); }
+  var mBase = cmat(0xd2ad78), mTable = cmat(0xe0be8a), mArm = cmat(0xe2c08c), mFore = cmat(0xe6c795), mJaw = wmat(0xffffff);
+  var mStick = wmat(0xfff2d4);
   var mServo = new THREE.MeshStandardMaterial({ color: 0x2f6fb5, roughness: 0.6 });
   var mHorn = new THREE.MeshStandardMaterial({ color: 0xf2f2f2, roughness: 0.5 });
 
@@ -1322,6 +1337,24 @@ td.m { font-family: var(--font-data); }
     var mesh = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, sz), m);
     mesh.position.set(x, y, z);
     mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry), edgeMat));
+    parent.add(mesh);
+    return mesh;
+  }
+  // dondurma çubuğu: yuvarlak uçlu, ince. plane 'xy' yatay, 'xz' dikey (uzunluk x), 'zlen' uzunluk z boyunca
+  function stickGeo(len, wid, thk, plane) {
+    var r = Math.min(wid / 2, len / 2), hl = len / 2, hw = wid / 2, sh = new THREE.Shape();
+    sh.moveTo(-hl + r, -hw); sh.lineTo(hl - r, -hw); sh.absarc(hl - r, 0, r, -Math.PI / 2, Math.PI / 2, false);
+    sh.lineTo(-hl + r, hw); sh.absarc(-hl + r, 0, r, Math.PI / 2, 1.5 * Math.PI, false);
+    var g = new THREE.ExtrudeGeometry(sh, { depth: thk, bevelEnabled: false, curveSegments: 10 });
+    g.translate(0, 0, -thk / 2);
+    if (plane === 'xz' || plane === 'zlen') g.rotateX(Math.PI / 2);
+    if (plane === 'zlen') g.rotateY(Math.PI / 2);
+    return g;
+  }
+  function stick(parent, len, wid, thk, plane, x, y, z, m) {
+    var mesh = new THREE.Mesh(stickGeo(len, wid, thk, plane), m || mStick);
+    mesh.position.set(x, y, z);
+    mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry, 40), edgeMat));
     parent.add(mesh);
     return mesh;
   }
@@ -1337,8 +1370,9 @@ td.m { font-family: var(--font-data); }
   }
 
   // fixed base box
-  box(scene, 180, 150, 40, 0, 0, 20, mBase);
-  box(scene, 24, 2, 14, 0, -75.5, 24, new THREE.MeshStandardMaterial({ color: 0x222a31, roughness: 0.8 }));
+  box(scene, 200, 160, 14, 0, 0, 7, mBase);
+  box(scene, 160, 126, 14, 0, 0, 21, mTable);
+  box(scene, 120, 96, 12, 0, 0, 34, mBase);
 
   var yawG = group(scene);
   box(yawG, 110, 90, 6, 0, 0, 3, mTable);
@@ -1349,7 +1383,10 @@ td.m { font-family: var(--font-data); }
   });
 
   var shG = group(yawG);
-  [-1, 1].forEach(function (s) { box(shG, 28, 6, 88, 0, s * 12, 30, mArm); });
+  [-1, 1].forEach(function (s) {
+    stick(shG, 88, 16, 2.5, 'zlen', -8, s * 12, 30);
+    stick(shG, 88, 16, 2.5, 'zlen', 8, s * 12, 30);
+  });
   box(shG, 12.2, 22.7, 22.5, 0, 26.4, 55, mServo);
   horn(shG, 0, 16.5, 60);
   var bolt = new THREE.Mesh(new THREE.CylinderGeometry(3, 3, 6, 16), mHorn);
@@ -1357,7 +1394,8 @@ td.m { font-family: var(--font-data); }
   box(shG, 14, 18, 20, 0, 0, 30, mFore);
 
   var elG = group(shG);
-  box(elG, 58, 6, 40, 17, 0, 0, mFore);
+  [-1, 1].forEach(function (s) { stick(elG, 62, 16, 2.5, 'xz', 17, 0, s * 11); });
+  box(elG, 30, 6, 30, 0, 0, 0, mFore);
   box(elG, 38, 40, 6, 51, 0, 0, mArm);
   [-1, 1].forEach(function (s) {
     box(elG, 22.5, 12.2, 22.7, 49.75, s * 9, -14.35, mServo);
@@ -1365,8 +1403,8 @@ td.m { font-family: var(--font-data); }
     h.rotation.x = Math.PI / 2; h.position.set(L2, s * 9, 4.25); elG.add(h);
   });
   var jawA = group(elG), jawB = group(elG);
-  box(jawA, L3, 6, 12, L3 / 2, 0, 0, mJaw);
-  box(jawB, L3, 6, 12, L3 / 2, 0, 0, mJaw);
+  stick(jawA, L3 + 8, 14, 3, 'xz', L3 / 2, 0, 0, mStick);
+  stick(jawB, L3 + 8, 14, 3, 'xz', L3 / 2, 0, 0, mStick);
 
   // target pads
   function padTexture(css, letter, filled) {
@@ -1611,19 +1649,28 @@ td.m { font-family: var(--font-data); }
     keyMap[j.plus.key] = { i: i, dir: 1, b: j.plus };
     keyMap[j.minus.key] = { i: i, dir: -1, b: j.minus };
   });
+  var arrows = { arrowleft: 'q', arrowright: 'e', arrowup: 'w', arrowdown: 's' };   // ok tuşları: taban ve omuz
+  function keyName(e) { var k = (e.key || '').toLowerCase(); return arrows[k] || k; }
   window.addEventListener('keydown', function (e) {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
-    var key = (e.key || '').toLowerCase();
+    var tg = e.target && e.target.tagName;
+    if (tg === 'SELECT' || tg === 'INPUT' || tg === 'TEXTAREA') return;
+    var key = keyName(e);
+    if (arrows[(e.key || '').toLowerCase()]) e.preventDefault();
     if (key === 'g' && !e.repeat) { auto.on ? stopAuto('Otomatik görev durdu.') : startAuto(); return; }
     var k = keyMap[key];
     if (!k) return;
     joints[k.i].keyDir = k.dir; k.b.el.classList.add('on');
   });
   window.addEventListener('keyup', function (e) {
-    var k = keyMap[(e.key || '').toLowerCase()];
+    var k = keyMap[keyName(e)];
     if (!k) return;
     if (joints[k.i].keyDir === k.dir) joints[k.i].keyDir = 0;
     k.b.el.classList.remove('on');
+  });
+  window.addEventListener('blur', function () {
+    joints.forEach(function (j) { j.keyDir = 0; });
+    Object.keys(keyMap).forEach(function (k) { keyMap[k].b.el.classList.remove('on'); });
   });
   autoBtn.addEventListener('click', function () { auto.on ? stopAuto('Otomatik görev durdu.') : startAuto(); });
   document.getElementById('resetBtn').addEventListener('click', resetAll);

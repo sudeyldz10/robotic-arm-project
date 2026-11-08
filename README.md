@@ -9,6 +9,22 @@ Dönme matrislerinden (Rx/Ry/Rz → atan2) servo açısı hesaplayan, butonlu ve
 - **Görev:** 3 küpü (kırmızı, yeşil, mavi) alıp kendi hedeflerine (A, B, C) taşır.
 - **Seri monitör (9600):** `j <base|shoulder|elbow|grip> <derece>` · `fk` · `home` · `task` · `stop` · `setstart` (mevcut pozu açılış pozu olarak kaydeder) · `resetstart`
 
+## Simülasyon
+
+Kolun 3D simülasyonu tarayıcıda çalışır: [simülasyonu aç](https://sudeyldz10.github.io/robotic-arm-project/simulasyon/robot_kol_simulasyon.html). Dosyayı indirip `simulasyon/robot_kol_simulasyon.html` dosyasını tarayıcıda açarak da çalıştırabilirsin.
+
+Klavye tuşları, fiziksel butonlarla aynı işi yapar:
+
+| Eklem | Tuşlar |
+|---|---|
+| Taban | `Q` / `E` (ya da ← →) |
+| Omuz | `W` / `S` (ya da ↑ ↓) |
+| Dirsek | `R` / `F` |
+| Gripper aç / kapat | `Z` / `X` |
+| Otomatik görev başlat / durdur | `G` |
+
+Tuşu basılı tuttukça eklem döner. Gripper'ı küpün üstünde kapatırsan küpü tutar, hedefte açarsan bırakır.
+
 ## Buton testi ve breadboard bağlantısı
 
 Butonlar önce `test_donanim/buton_testi.ino` ile tek başına denendi. Bir butona basınca adı seri monitöre (9600 baud) yazılır, örneğin `Base right pressed`. Servolar bu aşamada takılı değildi.
@@ -52,10 +68,10 @@ Doğru bağlantıda: basmadan monitör sessiz kalır, basınca butonun adı yaz�
 ## Klasörler
 - `src/main.cpp` – Arduino/PlatformIO kodu
 - `diagram.json`, `wokwi.toml` – Wokwi devresi (PlatformIO derlemesi sonrası çalışır)
-- `simulasyon/robot_kol_simulasyon.html` – tarayıcıda açılan 3D simülasyon (küpler, hedefler, otomatik görev)
+- `simulasyon/robot_kol_simulasyon.html` – tarayıcıda açılan 3D simülasyon (küpler, hedefler, klavye kontrolü, otomatik görev)
 - `test_donanim/buton_testi.ino` – butonları seri monitörden test eden küçük kod (kendi klasöründe aç)
 - `karton_sablonlar.pdf` – 1:1 karton kesim şablonları
 - `gorseller/` – README fotoğrafları
-- `arduino-denemeler/` – eski deneme kayıtları
+- `arduino-denemeler/` – ilk basit denemeler (LED yakma gibi) ve ekran kayıtları
 
 > Konum sabitleri (omuz yüksekliği, tutma noktası, küp/hedef açıları) kendi kolunun ölçüsüne göre kalibre edilmelidir.
