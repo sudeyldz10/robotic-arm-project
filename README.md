@@ -9,25 +9,11 @@ Dönme matrislerinden (Rx/Ry/Rz → atan2) servo açısı hesaplayan, butonlu ve
 - **Görev:** 3 küpü (kırmızı, yeşil, mavi) alıp kendi hedeflerine (A, B, C) taşır.
 - **Seri monitör (9600):** `j <base|shoulder|elbow|grip> <derece>` · `fk` · `home` · `task` · `stop` · `setstart` (mevcut pozu açılış pozu olarak kaydeder) · `resetstart`
 
-## Simülasyon
-
-Kolun 3D simülasyonu tarayıcıda çalışır: [simülasyonu aç](https://sudeyldz10.github.io/robotic-arm-project/simulasyon/robot_kol_simulasyon.html). Dosyayı indirip `simulasyon/robot_kol_simulasyon.html` dosyasını tarayıcıda açarak da çalıştırabilirsin.
-
-Klavye tuşları, fiziksel butonlarla aynı işi yapar:
-
-| Eklem | Tuşlar |
-|---|---|
-| Taban | `Q` / `E` (ya da ← →) |
-| Omuz | `W` / `S` (ya da ↑ ↓) |
-| Dirsek | `R` / `F` |
-| Gripper aç / kapat | `Z` / `X` |
-| Otomatik görev başlat / durdur | `G` |
-
-Tuşu basılı tuttukça eklem döner. Gripper'ı küpün üstünde kapatırsan küpü tutar, hedefte açarsan bırakır.
-
 ## Buton testi ve breadboard bağlantısı
 
-Butonlar önce `test_donanim/buton_testi.ino` ile tek başına denendi. Bir butona basınca adı seri monitöre (9600 baud) yazılır, örneğin `Base right pressed`. Servolar bu aşamada takılı değildi.
+**Durum:** Buton testi ve servolu genel test, kabloların ve butonların breadboard'a tam oturmaması nedeniyle tamamlanamadı. Buton test kodu Arduino'ya yüklendi ve çalıştı (`Button test started` yazısı geliyor), ana kod (`src/main.cpp`) derlendi. Breadboard bağlantısı aşağıda anlatıldığı gibi kuruldu, ancak butonların tamamı doğrulanamadı.
+
+Butonlar `test_donanim/buton_testi.ino` ile tek başına denenir. Bir butona basınca adı seri monitöre (9600 baud) yazılır, örneğin `Base right pressed`. Servolar bu aşamada takılı olmaz. Servolu genel test için `src/main.cpp` kullanılır.
 
 ### Butonlar
 
@@ -61,14 +47,13 @@ Bir ray sırasındaki bütün delikler birbirine bağlıdır. Kabloyu sıranın 
 
 ### Test sırasında karşılaşılan sorun
 
-Butona basmadan seri monitöre sürekli `... pressed` yazılıyordu. Sebep: butonun içinde birbirine hep bağlı olan bacaklar oluğun iki yanına denk gelmişti, yani devre basmadan kapalıydı. **Butonu 90° çevirip tekrar takınca** sorun çözüldü. Bacakların sıkıca oturduğundan da emin olmak gerekiyor, eğri bacaklar temas etmeyebilir.
+Bazı butonlarda basmadan seri monitöre sürekli `... pressed` yazıldı. Olası sebep: butonun içinde birbirine hep bağlı olan bacaklar ortadaki oluğun iki yanına denk geliyor, yani devre basmadan kapalı kalıyor. Çözüm olarak **butonu 90° çevirip tekrar takmak** gerekiyor. Ayrıca bacakların deliklere sıkıca oturması ve kabloların gevşek olmaması gerekiyor. Bu düzeltmeler kablo ve buton oturma sorunları yüzünden uçtan uca doğrulanamadı.
 
-Doğru bağlantıda: basmadan monitör sessiz kalır, basınca butonun adı yazılır.
+Doğru bağlantıda beklenen davranış: basmadan monitör sessiz kalır, basınca butonun adı yazılır.
 
 ## Klasörler
 - `src/main.cpp` – Arduino/PlatformIO kodu
 - `diagram.json`, `wokwi.toml` – Wokwi devresi (PlatformIO derlemesi sonrası çalışır)
-- `simulasyon/robot_kol_simulasyon.html` – tarayıcıda açılan 3D simülasyon (küpler, hedefler, klavye kontrolü, otomatik görev)
 - `test_donanim/buton_testi.ino` – butonları seri monitörden test eden küçük kod (kendi klasöründe aç)
 - `karton_sablonlar.pdf` – 1:1 karton kesim şablonları
 - `gorseller/` – README fotoğrafları
